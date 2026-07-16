@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [account-service, transfer-service]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.service }}
+        run: pip install -r requirements.txt
+
+      - name: Syntax check
+        working-directory: ${{ matrix.service }}
+        run: python -m py_compile app.py
+
+  package:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package artifact
+        run: tar -czf fund-transfer-demo.tar.gz account-service transfer-service docker-compose.yml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fund-transfer-demo
+          path: fund-transfer-demo.tar.gz
