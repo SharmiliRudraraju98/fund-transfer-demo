@@ -40,3 +40,5 @@ a step ever needs to change for both services.
 - Running the actual integration test (`pytest tests/`) against a live stack
 - Docker image build + push to a registry
 - Deployment stage (AWS / Kubernetes)
+## PR trigger test
+Verifying the workflow runs as a required check on pull requests.
