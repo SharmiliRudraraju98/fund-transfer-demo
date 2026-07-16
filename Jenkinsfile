@@ -30,6 +30,14 @@ pipeline {
             }
         }
 
+        stage('Verify Agent 1') {
+            agent { label 'docker-agent' }
+            steps {
+                echo "This stage is running on: ${env.NODE_NAME}"
+                sh 'hostname'
+            }
+        }
+
         stage('Package') {
             steps {
                 sh 'tar -czf fund-transfer-demo.tar.gz account-service transfer-service docker-compose.yml'
