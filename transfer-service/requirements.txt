@@ -1,5 +1,5 @@
 Flask==3.0.3
 SQLAlchemy==2.0.30
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.12
 requests==2.32.3
 flasgger==0.9.7.1
