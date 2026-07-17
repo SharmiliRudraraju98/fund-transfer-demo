@@ -36,6 +36,8 @@ COPY --from=builder /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
 
 COPY . .
+RUN useradd --create-home appuser && chown -R appuser /app
+USER appuser
 
 EXPOSE 5002
 

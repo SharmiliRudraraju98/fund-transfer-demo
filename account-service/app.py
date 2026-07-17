@@ -9,6 +9,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 app = Flask(__name__)
 app.config["SWAGGER"] = {"title": "Account Service API", "uiversion": 3}
 swagger = Swagger(app)
+ACCOUNT_NOT_FOUND_ERROR = "account not found"
 
 DATABASE_URL = os.environ.get(
     "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/appdb"
@@ -111,7 +112,7 @@ def get_account(account_id):
     try:
         account = session.get(Account, account_id)
         if not account:
-            return jsonify({"error": "account not found"}), 404
+            return jsonify({"error": ACCOUNT_NOT_FOUND_ERROR}), 404
         return jsonify({"id": account.id, "balance": str(account.balance)}), 200
     finally:
         session.close()
@@ -156,7 +157,7 @@ def debit_account(account_id):
     try:
         account = session.get(Account, account_id)
         if not account:
-            return jsonify({"error": "account not found"}), 404
+            return jsonify({"error": ACCOUNT_NOT_FOUND_ERROR}), 404
         if account.balance < amount:
             return jsonify({"error": "insufficient funds"}), 400
         account.balance -= amount
@@ -205,7 +206,7 @@ def credit_account(account_id):
     try:
         account = session.get(Account, account_id)
         if not account:
-            return jsonify({"error": "account not found"}), 404
+            return jsonify({"error": ACCOUNT_NOT_FOUND_ERROR}), 404
         account.balance += amount
         session.commit()
         return jsonify({"id": account.id, "balance": str(account.balance)}), 200
